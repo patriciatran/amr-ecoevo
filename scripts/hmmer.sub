@@ -6,11 +6,11 @@ container_image = file:///projects/bacteriology_tran_data/apptainer/hmmer.sif
 executable = hmmer.sh
 arguments = $(sample) $(hmm) $(staging)
 
-staging = /staging/ptran5/HiteLab/
+staging = /staging/ptran5/
 
-transfer_input_files = file://$(staging)/preprocessing/assembly/$(sample)_scaffolds.fasta,file://$(staging)/HMM/$(hmm).HMM
+transfer_input_files = file://$(staging)/preprocessing/assembly/$(sample)_scaffolds.fasta,file://$(staging)/HiteLab/HMM/$(hmm).HMM
 transfer_output_files = $(sample)_vs_$(hmm).fasta
-transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/hmm_out/$(sample)_vs_$(hmm).fasta"
+transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/HiteLab/hmm_out/$(sample)_vs_$(hmm).fasta"
 
 log = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).log
 error = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).err

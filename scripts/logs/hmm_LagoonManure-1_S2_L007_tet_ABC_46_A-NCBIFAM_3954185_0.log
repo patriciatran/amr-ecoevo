@@ -1,0 +1,7 @@
+012 (3954185.000.000) 2025-02-05 15:48:46 Job was held.
+	Transfer input files failure at execution point slot1_1@e2622.chtc.wisc.edu using protocol file. Details: Couldn't open file /staging/ptran5/HiteLab//preprocessing/assembly/LagoonManure-1_S2_L007_scaffolds.fasta (with environment: http_proxy='http://squid-cs-2360.chtc.wisc.edu:3128', https_proxy='') ( URL file = file:///staging/ptran5/HiteLab//preprocessing/assembly/LagoonManure-1_S2_L007_scaffolds.fasta )|
+	Code 13 Subcode 256
+...
+009 (3954185.000.000) 2025-02-05 15:53:36 Job was aborted.
+	via condor_rm (by user ptran5)
+...

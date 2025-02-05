@@ -9,4 +9,4 @@ hmmsearch --cut_tc -A ${SAMPLE}_vs_${HMM}.sto ${STAGING}/HMM/${hmm}.hmm > ${SAMP
 
 esl-reformat fasta ${SAMPLE}_vs_${HMM}.sto > ${SAMPLE}_vs_${HMM}.fasta
 
-mkdir -p ${STAGING}/hmm_out
+mkdir -p ${STAGING}/HiteLab/hmm_out
