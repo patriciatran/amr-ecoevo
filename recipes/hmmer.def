@@ -1,0 +1,2 @@
+Bootstrap: docker
+From: staphb/hmmer:3.4

@@ -1,0 +1,25 @@
+# apptainer.sub
+
+# Provide HTCondor with the name of your .sif file and universe information
+container_image = file:///projects/bacteriology_tran_data/apptainer/hmmer.sif
+
+executable = hmmer.sh
+arguments = $(sample) $(hmm) $(staging)
+
+staging = /staging/ptran5/HiteLab/
+
+transfer_input_files = file://$(staging)/preprocessing/assembly/$(sample)_scaffolds.fasta,file://$(staging)/HMM/$(hmm).HMM
+transfer_output_files = $(sample)_vs_$(hmm).fasta
+transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/hmm_out/$(sample)_vs_$(hmm).fasta"
+
+log = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).log
+error = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).err
+output = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 20
+request_memory = 64GB
+request_disk = 50GB      
+
+queue sample,hmm from sample_hmm.txt

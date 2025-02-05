@@ -1,0 +1,5 @@
+LagoonManure-1_S2_L007,tet_ABC_46_A-NCBIFAM
+LagoonManure-1_S2_L007,tet_ABC_46_B-NCBIFAM
+LagoonManure-1_S2_L007,tet_ABC_AB_A-NCBIFAM
+LagoonManure-1_S2_L007,tet_ABC_AB_B-NCBIFAM
+LagoonManure-1_S2_L007,tet_destruct-NCBIFAM
