@@ -1,2 +1,5 @@
 Bootstrap: docker
-From: staphb/hmmer:3.4
+From: continuumio/miniconda3:24.11.1-0
+
+%post
+	conda install -c bioconda -c conda-forge easel=0.49 hmmer=3.4

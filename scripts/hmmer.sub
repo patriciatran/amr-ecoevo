@@ -8,7 +8,7 @@ arguments = $(sample) $(hmm) $(staging)
 
 staging = /staging/ptran5/
 
-transfer_input_files = file://$(staging)/preprocessing/assembly/$(sample)_scaffolds.fasta,file://$(staging)/HiteLab/HMM/$(hmm).HMM
+transfer_input_files = file://$(staging)/$(sample)_scaffolds_proteins.faa,file://$(staging)/HiteLab/HMM/$(hmm).HMM
 transfer_output_files = $(sample)_vs_$(hmm).fasta
 transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/HiteLab/hmm_out/$(sample)_vs_$(hmm).fasta"
 
@@ -18,8 +18,8 @@ output = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).out
 
 requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
 
-request_cpus = 20
-request_memory = 64GB
-request_disk = 50GB      
+request_cpus = 8
+request_memory = 16GB
+request_disk = 15GB      
 
-queue sample,hmm from sample_hmm.txt
+queue sample,hmm from all_hmm.txt
