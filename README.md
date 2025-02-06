@@ -93,6 +93,18 @@ hmm_SampleA_ANT_6-NCBIFAM_3954240_92.out:# Alignment of 7 hits satisfying inclus
 hmm_SampleA_ANT_9-NCBIFAM_3954240_95.out:# Alignment of 2 hits satisfying inclusion thresholds saved to: SampleA_vs_ANT_9-NCBIFAM.sto
 ```
 
+7. Get a list of all files > size 0
+
+```
+find /staging/netid/hmm_out/ -type f -size +0c > AMR_found.txt
+sed -i 's|/staging/netid/hmm_out/||g' AMR_found.txt 
+sed -i 's|.fasta||g' AMR_found.txt
+```
+
+8. Run the alignment for each protein
+
+
+
 You can pipe this to a file, and use it for plotting later one. Essentially, you have a table on how many variants exist in each samples.
 
 # What's next
