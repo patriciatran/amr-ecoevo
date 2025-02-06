@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: staphb/mafft:7.526
+
+%post
+

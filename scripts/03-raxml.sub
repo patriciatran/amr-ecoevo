@@ -1,0 +1,25 @@
+# apptainer.sub
+
+# Provide HTCondor with the name of your .sif file and universe information
+container_image = file:///projects/bacteriology_tran_data/apptainer/raxml.sub
+
+executable = 03-raxml.sub
+arguments = $(sample) $(staging) $(request_cpus)
+
+staging = /staging/ptran5/HiteLab/
+
+transfer_input_files = file://$(staging)/aln/$(sample).aln.fasta
+transfer_output_files = RAxML_$(sample).tar.gz
+transfer_output_remaps = "RAxML_$(sample).tar.gz=file://$(staging)/raxml/RAxML_$(sample).tar.gz"
+
+log = logs/raxml_$(sample)_$(cluster)_$(process).log
+error = logs/raxml_$(sample)_$(cluster)_$(process).err
+output = logs/raxml_$(sample)_$(cluster)_$(process).out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 12
+request_memory = 64GB
+request_disk = 15GB      
+
+queue sample from AMR_found_test.txt

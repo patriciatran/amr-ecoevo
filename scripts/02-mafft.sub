@@ -1,0 +1,25 @@
+# apptainer.sub
+
+# Provide HTCondor with the name of your .sif file and universe information
+container_image = file:///projects/bacteriology_tran_data/apptainer/mafft.sif
+
+executable = 02-mafft.sh
+arguments = $(sample) $(staging) $(request_cpus)
+
+staging = /staging/ptran5/HiteLab/
+
+transfer_input_files = file://$(staging)/hmm_out/$(sample).fasta
+transfer_output_files = $(sample).aln.fasta
+transfer_output_remaps = "$(sample).aln.fasta=file://$(staging)/aln/$(sample).aln.fasta"
+
+log = logs/mafft_$(sample)_$(cluster)_$(process).log
+error = logs/mafft_$(sample)_$(cluster)_$(process).err
+output = logs/mafft_$(sample)_$(cluster)_$(process).out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 8
+request_memory = 16GB
+request_disk = 15GB      
+
+queue sample from AMR_found.txt

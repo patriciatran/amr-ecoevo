@@ -3,7 +3,7 @@
 # Provide HTCondor with the name of your .sif file and universe information
 container_image = file:///projects/bacteriology_tran_data/apptainer/hmmer.sif
 
-executable = hmmer.sh
+executable = 01-hmmer.sh
 arguments = $(sample) $(hmm) $(staging)
 
 staging = /staging/ptran5/
