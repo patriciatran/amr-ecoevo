@@ -30,6 +30,13 @@ raxmlHPC -s ${STAGING}/aln/${SAMPLE}.aln.fasta \
 
 # All output will begin with the word
 #RAxML_*
+ls -lht
+
+# Get majority rule tree:
+raxmlHPC -J MR \
+	-m PROTGAMMAAUTO \
+	-z RAxML_bootstrap.${SAMPLE}_${BOOTSTRAP} \
+	-n ${SAMPLE}_${BOOTSTRAP}_MR
 
 ls -lht
 

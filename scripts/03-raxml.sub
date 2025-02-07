@@ -25,4 +25,4 @@ request_cpus = 12
 request_memory = 64GB
 request_disk = 15GB      
 
-queue sample from AMR_found_test.txt
+queue sample from AMR_found.txt
