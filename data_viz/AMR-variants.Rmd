@@ -1,0 +1,56 @@
+---
+title: "MSA variants AMR"
+author: "Patricia Tran"
+date: "`r Sys.Date()`"
+time: "`r.Sys.Time()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Install packages:
+```{r}
+if (!requireNamespace("devtools", quietly=TRUE))
+    install.packages("devtools")
+devtools::install_github("YuLab-SMU/ggmsa")
+library(ggmsa)
+library(msa)
+```
+# Read in data:
+Processed using https://github.com/patriciatran/amr-ecoevo
+
+```{r}
+protein_sequences <- readAAMultipleAlignment(filepath = "~/Downloads/LagoonManure-1_S2_L007_vs_chaperon_ArsD-NCBIFAM.aln.fasta")
+protein_sequences
+```
+
+# Plot data:
+```{r}
+ggmsa(protein_sequences, char_width = 0.5, seq_name = F) + geom_seqlogo() + geom_msaBar()
+
+library(ggplot2)
+ggsave("figures/aln_ArsD-NCBIFAM.pdf", width = 8, height = 6)
+```
+
+# Plotting the raxml tree:
+```{r}
+library(ggtree)
+library(treeio)
+
+trees <- read.raxml(file = "~/RAxML_MajorityRuleConsensusTree.MR_CONS")
+
+msaplot(p=ggtree(trees), 
+        fasta="~/Downloads/LagoonManure-1_S2_L007_vs_chaperon_ArsD-NCBIFAM_2.aln.fasta", 
+        width=0.8) +
+  theme_tree() +
+  #geom_tiplab(mapping = aes(label = label)) +
+  geom_nodelab(mapping = aes(label = bootstrap),nudge_x = -0.5, nudge_y = 0.55) +
+  geom_treescale()
+  #geom_tiplab(align=TRUE, linesize=.5, size=0.5) 
+
+ggsave("figures/tree_with_msa.pdf", width = 8, height = 9)
+```
+
+
