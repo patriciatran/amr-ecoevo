@@ -65,9 +65,10 @@ Open the files located under `scripts` using a terminal text editor such as nano
 6. Submit your job
    
 The repo already comes with a file called `all_hmm.txt` that will be used in the `queue` statement of the submit file.
+This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies.
 
 ```
-condor_submit hmmer.sub
+condor_submit 01-hmmer.sub
 ```
 
 This will submit 752 jobs to CHTC.
@@ -93,7 +94,11 @@ hmm_SampleA_ANT_6-NCBIFAM_3954240_92.out:# Alignment of 7 hits satisfying inclus
 hmm_SampleA_ANT_9-NCBIFAM_3954240_95.out:# Alignment of 2 hits satisfying inclusion thresholds saved to: SampleA_vs_ANT_9-NCBIFAM.sto
 ```
 
+You can pipe this to a file, and use it for plotting later one. Essentially, you have a table on how many variants exist in each samples.
+
 7. Get a list of all files > size 0
+
+Hmmer.sub will write a .fasta file output even if there were no genes found. To only pick genes with hits for the alignment steps, we will filter the output files and create a list of samples with hits only.
 
 ```
 find /staging/netid/hmm_out/ -type f -size +0c > AMR_found.txt
@@ -103,9 +108,33 @@ sed -i 's|.fasta||g' AMR_found.txt
 
 8. Run the alignment for each protein
 
+Here, we will run the program MAFFT to align proteins. We will obtain 1 alignment file per protein.
+Edit the `02-mafft.sub` file with the netid as appropriate. 
+
+```
+condor_submit 02-mafft.sub
+```
+
+9. Run a maximum likelihood tree with bootstrapping.
+
+The goal here is a to create a single-gene phylogeny for each of the AMR found. 
+In the `03-raxml.sub` script, we set bootstrap values to be 100, but you can easily edit that to say 500, 1000, etc. as appropriate. 
+Once again change file paths to `staging` as necessary.
+
+>[!NOTE]
+>RAxML as many settings, but here we use the protein gamma automatic model (-m). To make it reproducible, we also added a seed # and -b for any steps that would otherwise use a randomly generated seed.
+
+```
+condor_submit 03-raxml.sh
+```
+
+10. You will now have a newick tree file for each gene
+
+11. Plot
+You can use R and the example code attached to create a figure showing the number of genomic variants for each gene in you samples.
 
 
-You can pipe this to a file, and use it for plotting later one. Essentially, you have a table on how many variants exist in each samples.
+
 
 # What's next
 
