@@ -1,0 +1,23 @@
+# apptainer.sub
+
+executable = 00-add-sample-to-fasta.sh
+arguments = $(sample)
+
+staging = /staging/ptran5/
+
+transfer_input_files = file://$(staging)/$(sample)_scaffolds_proteins.faa, add_sample_to_fasta.py
+transfer_output_files = $(sample)_renamed_scaffolds_proteins.faa
+transfer_output_remaps = "$(sample)_renamed_scaffolds_proteins.faa=file://$(staging)/$(sample)_renamed_scaffolds_proteins.faa"
+
+
+log = logs/filename.log
+error = logs/filename_$(sample).error
+output = logs/filename_$(sample).output
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 2
+request_memory = 4GB
+request_disk = 10GB      
+
+queue sample from samples2.txt

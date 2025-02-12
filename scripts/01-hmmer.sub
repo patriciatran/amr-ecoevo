@@ -8,9 +8,9 @@ arguments = $(sample) $(hmm) $(staging)
 
 staging = /staging/ptran5/
 
-transfer_input_files = file://$(staging)/$(sample)_scaffolds_proteins.faa,file://$(staging)/HiteLab/HMM/$(hmm).HMM
-transfer_output_files = $(sample)_vs_$(hmm).fasta
-transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/HiteLab/hmm_out/$(sample)_vs_$(hmm).fasta"
+transfer_input_files = file://$(staging)/$(sample)_renamed_scaffolds_proteins.faa,file://$(staging)/HiteLab/HMM/$(hmm).HMM
+transfer_output_files = $(sample)_vs_$(hmm).fasta,$(sample)_vs_$(hmm).tsv
+transfer_output_remaps = "$(sample)_vs_$(hmm).fasta=file://$(staging)/HiteLab/hmm_out/$(sample)_vs_$(hmm).fasta;$(sample)_vs_$(hmm).tsv=file://$(staging)/HiteLab/hmm_out/$(sample)_vs_$(hmm).tsv"
 
 log = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).log
 error = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).err
