@@ -22,4 +22,4 @@ request_cpus = 8
 request_memory = 16GB
 request_disk = 15GB      
 
-queue sample,hmm from all_hmm.txt
+queue sample,hmm from sample_hmm_combinations.csv
