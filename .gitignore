@@ -1,3 +1,4 @@
-scripts/logs/*
-recipes/*log
-recipes/*history
+./scripts/logs/*
+./recipes/*log
+./recipes/*history
+./recipes/build.log
