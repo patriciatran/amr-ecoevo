@@ -20,4 +20,4 @@ request_cpus = 2
 request_memory = 4GB
 request_disk = 10GB      
 
-queue sample from samples2.txt
+queue sample from samples.txt
