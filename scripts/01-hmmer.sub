@@ -4,7 +4,7 @@
 container_image = file:///projects/bacteriology_tran_data/apptainer/hmmer.sif
 
 executable = 01-hmmer.sh
-arguments = $(sample) $(hmm) $(staging)
+arguments = $(sample) $(hmm) $(staging) $(request_cpus)
 
 staging = /staging/ptran5/
 
@@ -18,8 +18,8 @@ output = logs/hmm_$(sample)_$(hmm)_$(cluster)_$(process).out
 
 requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
 
-request_cpus = 8
-request_memory = 16GB
-request_disk = 15GB      
+request_cpus = 2
+request_memory = 32GB
+request_disk = 200GB      
 
 queue sample,hmm from sample_hmm_combinations.csv

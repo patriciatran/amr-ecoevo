@@ -62,10 +62,25 @@ exit
    
 Open the files located under `scripts` using a terminal text editor such as nano and edit the file paths as necessary. Likely you will need to modify the path to the container image sif, the staging folder path at least.
 
-6. Submit your job
+5. Rename fasta headers
+
+Each proteins.faa file only starts with NODE_#, but when we make the phylogenetic tree, it would be helpful to have an identifier to say where the sample comes from. Therefore, I wrote the `add_sample_to_fasta.py` python script to append the sample name before the word NODE_#.
+
+```
+condor_submit 00-add-sample-to-fasta.sub
+```
+
+7. Combine files (optional)
+
+Depending on how many samples you have, you will multiple that number by 752 and then by 2 to tell you how many output files to expect. If that is beyond your CHTC items quota, you might want to combine all the `.faa` files into one before running the hmm search job.
+
+```
+condor_submit combined_fasta.sub
+```
+
+6. Perform HMM search
    
-The repo already comes with a file called `all_hmm.txt` that will be used in the `queue` statement of the submit file.
-This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies.
+The repo already comes with a file called `all_hmm.txt` that will be used in the `queue` statement of the submit file. This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies. Note, this only uses 2CPU. Even on a large file (e.g. 82GB) the search is relatively quick. Increasing beyond 2CPU does not improve performance (see hmmer documentation)
 
 ```
 condor_submit 01-hmmer.sub
@@ -76,8 +91,8 @@ This will submit 752 jobs to CHTC.
 6. Count how many hits are obtained for each sample
    
 ```
-cd ~/amr-ecoevo/scripts/logs
-grep 'hits satisfying' *
+cd logs
+grep 'hits satisfying' hmm_all_samples*
 ```
 You might see something like this:
 ```
@@ -96,14 +111,21 @@ hmm_SampleA_ANT_9-NCBIFAM_3954240_95.out:# Alignment of 2 hits satisfying inclus
 
 You can pipe this to a file, and use it for plotting later one. Essentially, you have a table on how many variants exist in each samples.
 
-7. Get a list of all files > size 0
+```
+grep 'hits satisfying' logs/hmm_all_samples_* > ../table_hits_all_HMM.txt
+```
 
-Hmmer.sub will write a .fasta file output even if there were no genes found. To only pick genes with hits for the alignment steps, we will filter the output files and create a list of samples with hits only.
+7. Get a list of all FASTA files > size 0
+
+`01-hmmer.sub` will write a `.fasta` file output even if there were no genes found. To only pick genes with hits for the alignment steps, we will filter the output files and create a list of samples with hits only.
+Replace netid with yours
 
 ```
+cd ..
 find /staging/netid/hmm_out/ -type f -size +0c > AMR_found.txt
 sed -i 's|/staging/netid/hmm_out/||g' AMR_found.txt 
 sed -i 's|.fasta||g' AMR_found.txt
+wc -l AMR_found.txt
 ```
 
 8. Run the alignment for each protein
@@ -115,11 +137,18 @@ Edit the `02-mafft.sub` file with the netid as appropriate.
 condor_submit 02-mafft.sub
 ```
 
+This takes less than 2 minutes, even on the full dataset.
+You can sort the output files by size:
+
+```
+ll -lhS /staging/$USER/HiteLab/aln
+```
+
 9. Run a maximum likelihood tree with bootstrapping.
 
 The goal here is a to create a single-gene phylogeny for each of the AMR found. 
 In the `03-raxml.sub` script, we set bootstrap values to be 100, but you can easily edit that to say 500, 1000, etc. as appropriate. 
-Once again change file paths to `staging` as necessary.
+Once again change file paths to `staging` as necessary. This reuses the sample list `AMR_found.txt` for the queue statement.
 
 >[!NOTE]
 >RAxML as many settings, but here we use the protein gamma automatic model (-m). To make it reproducible, we also added a seed # and -b for any steps that would otherwise use a randomly generated seed.

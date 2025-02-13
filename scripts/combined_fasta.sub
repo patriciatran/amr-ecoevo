@@ -1,0 +1,14 @@
+executable = combined_fasta.sh
+
+log = logs/filename_combine.log
+error = logs/filename_combine.err
+output = logs/filename_combine.out
+
+transfer_output_files = all_samples_renamed_scaffolds_proteins.faa
+transfer_output_remaps = "all_samples_renamed_scaffolds_proteins.faa=file:///staging/ptran5/all_samples_renamed_scaffolds_proteins.faa"
+
+request_cpus = 2
+request_memory = 4GB
+request_disk = 100GB
+
+queue
