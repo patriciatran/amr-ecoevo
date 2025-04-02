@@ -1,0 +1,23 @@
+# apptainer.sub
+
+# Provide HTCondor with the name of your .sif file and universe information
+container_image = file:///projects/bacteriology_tran_data/apptainer/gtdbtk.sif
+
+executable = 04-mag-tree.sh
+arguments = $(request_cpus)
+
+#transfer_input_files = file://$(staging)/aln/$(sample).aln.fasta
+#transfer_output_files = RAxML_$(sample)_$(bootstrap).tar.gz
+#transfer_output_remaps = "RAxML_$(sample)_$(bootstrap).tar.gz=file://$(staging)/raxml/RAxML_$(sample)_$(bootstrap).tar.gz"
+
+log = logs/mag_tree_$(sample)_$(cluster)_$(process).log
+error = logs/mag_tree_$(sample)_$(cluster)_$(process).err
+output = logs/mag_tree_$(sample)_$(cluster)_$(process).out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 16
+request_memory = 64GB
+request_disk = 200GB      
+
+queue
