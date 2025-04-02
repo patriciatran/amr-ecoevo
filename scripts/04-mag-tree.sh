@@ -7,6 +7,10 @@ mkdir genomes
 
 cp /staging/ptran5/MAGs/**/bins/refined/*_refine_bins_DASTool_bins/* genomes/.
 
+GTDBTK_DATA_PATH=/projects/bacteriology_tran_data/gtdbtk_v220/
+
+echo $GTDBTK_DATA_PATH
+
 gtdbtk de_novo_wf --genome_dir genomes/ \
 	--outgroup_taxon p__Patescibacteria \
 	--bacteria \
