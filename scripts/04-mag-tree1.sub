@@ -3,7 +3,7 @@
 # Provide HTCondor with the name of your .sif file and universe information
 container_image = file:///projects/bacteriology_tran_data/apptainer/gtdbtk.sif
 
-executable = 04-mag-tree.sh
+executable = 04-mag-tree1.sh
 arguments = $(request_cpus)
 
 #transfer_input_files = file://$(staging)/aln/$(sample).aln.fasta

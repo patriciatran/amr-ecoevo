@@ -21,15 +21,17 @@ echo $GTDBTK_DATA_PATH
 gtdbtk de_novo_wf --genome_dir genomes/ \
 	--outgroup_taxon p__Patescibacteria \
 	--bacteria \
-	--out_dir de_novo_wf \
+	--out_dir de_novo_wf_mag_only \
 	--cpus ${CPUS} \
-	--extension fa
+	--extension fa \
+	--skip_gtdb_refs \
+	--custom_taxonomy_file /staging/ptran5/MAGs/custom_bacteria_taxonomy.tsv
 
 # Compress folder and move it to staging.
 echo "compressing folder"
-tar -czvf de_novo_wf.tar.gz de_novo_wf
+tar -czvf de_novo_wf_mag_only.tar.gz de_novo_wf_mag_only
 
 echo "moving folder"
-mv de_novo_wf.tar.gz  /staging/ptran5/HiteLab/.
+mv de_novo_wf_mag_only.tar.gz  /staging/ptran5/HiteLab/.
 
 # done
