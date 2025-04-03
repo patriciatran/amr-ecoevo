@@ -27,6 +27,9 @@ gtdbtk de_novo_wf --genome_dir genomes/ \
 	--skip_gtdb_refs \
 	--custom_taxonomy_file /staging/ptran5/MAGs/custom_bacteria_taxonomy.tsv
 
+# convert the tree to itol format
+gtdbtk convert_to_itol --input_tree de_novo_wf_mag_only/gtdbtk.bac120.decorated.tree --output_tree de_novo_wf_mag_only/gtdbtk.bac120.decorated.itol.tree
+
 # Compress folder and move it to staging.
 echo "compressing folder"
 tar -czvf de_novo_wf_mag_only.tar.gz de_novo_wf_mag_only
