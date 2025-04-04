@@ -157,17 +157,12 @@ Once again change file paths to `staging` as necessary. This reuses the sample l
 condor_submit 03-raxml.sh
 ```
 
-10. You will now have a newick tree file for each gene
+10. You will now have a Newick-formatted tree file for each gene
 
 11. Plot
-You can use R and the example code attached to create a figure showing the number of genomic variants for each gene in you samples.
+You can use R and the example code to create a figure showing the number of genomic variants for each gene in your samples.
 
-
-
-
-# What's next
-
-You can export the aligned fasta file corresponding to each gene (e.g. all `vanR`) and align them, then build multiple phylogenetic trees.
+# Other things to do:
 
 
 
