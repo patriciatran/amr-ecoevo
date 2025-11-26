@@ -78,9 +78,11 @@ Depending on how many samples you have, you will multiple that number by 752 and
 condor_submit combined_fasta.sub
 ```
 
+This will create a file named `all_samples_renamed_scaffolds_proteins.faa` in your staging folder.
+
 6. Perform HMM search
    
-The repo already comes with a file called `all_hmm.txt` that will be used in the `queue` statement of the submit file. This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies. Note, this only uses 2CPU. Even on a large file (e.g. 82GB) the search is relatively quick. Increasing beyond 2CPU does not improve performance (see hmmer documentation)
+The repo already comes with a file called `sample_hmm_combinations.csv` that will be used in the `queue` statement of the submit file. This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies. Note, this only uses 2CPU. Even on a large file (e.g. 82GB) the search is relatively quick. Increasing beyond 2CPU does not improve performance (see hmmer documentation)
 
 ```
 condor_submit 01-hmmer.sub
