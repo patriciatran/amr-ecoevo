@@ -2,7 +2,7 @@
 
 container_image = docker://quay.io/biocontainers/rgi:6.0.3--pyha8f3691_0
 
-executable = 06-rgi-heatmap.sh
+executable = 05-rgi.sh
 
 arguments = $(mag) $(request_cpus)
 # Include other files that need to be transferred here.

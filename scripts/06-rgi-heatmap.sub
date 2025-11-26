@@ -1,0 +1,30 @@
+# HTCondor submit file that uses a container
+
+container_image = docker://quay.io/biocontainers/rgi:6.0.3--pyha8f3691_0
+
+executable = 06-rgi-heatmap.sh
+
+folder=/staging/ptran5/binning_wf/LagoonManure-1_S2_L007
+
+arguments = $(folder)
+# Include other files that need to be transferred here.
+# transfer_input_files = other_job_files
+
+#transfer_input_files = file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/bins/refined/LagoonManure-1_S2_L007_refine_bins_DASTool_bins/$(mag)
+#transfer_output_files = $(mag)_rgi.out.json,$(mag)_rgi.txt
+#transfer_output_remaps = "$(mag)_rgi.out.json=file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/rgi/$(mag)_rgi.out.json;\
+#$(mag)_rgi.out.txt=file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/rgi/$(mag)_rgi.out.txt"
+
+log = logs/rgi_heatmap.log
+error = logs/rgi_heatmap.err
+output = logs/rgi_heatmap.out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+
+# Make sure you request enough disk for the container image in addition to your other input files
+request_cpus = 2
+request_memory = 16GB
+request_disk = 10GB      
+
+queue
