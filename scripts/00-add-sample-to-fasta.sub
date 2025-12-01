@@ -1,5 +1,3 @@
-# apptainer.sub
-
 executable = 00-add-sample-to-fasta.sh
 arguments = $(sample)
 

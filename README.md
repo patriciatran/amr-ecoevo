@@ -1,7 +1,7 @@
 # amr-ecoevo
 
 # Purpose
-Display genomic variance between AMR+ genes in assembled metagenomes.
+The purpose of this workflow is to identify variants of AMR genes among assembled metagenome-assembled-genomes. 
 
 # Workflow
 Reads are first trimmed, host-removed, quality-checked and assembled into contigs. 
@@ -14,7 +14,10 @@ The output is a FASTA file of the given genes in given assemblies.
 A faa file for each assembly.
 
 ## Output:
-A folder containing .fasta file corresponding to each AMR. 
+- A folder containing .fasta file corresponding to each AMR. 
+- Newick-formatted file for single-gene phylogenies for each AMR gene
+- A phylogenetic tree for all the MAGs
+- A table with the Resistance Gene Identifier software results
 
 # Step-by-Step instructions
 
@@ -38,11 +41,12 @@ tar -xzvf NCBIfam-AMRFinder.HMM.tar.gz
 
 You will now have a folder labelled `HMM/` with over 700 files with the extension `.HMM`. 
 
-3. Create a software container or use a pre-made one
+3. Create a software container or use a pre-made one (optional)
 
-You can use the `build.sub` script under the `recipes/` folder to build an Apptainer SIF file, and move it to your `staging/netid` folder.
-Otherwise, you can use the one located at `/projects/bacteriology_tran_data/apptainer/hmmer.sif`. 
+These script submit files already link to the containers located at `/projects/bacteriology_tran_data/apptainer/hmmer.sif`. 
 
+If you want to build your own containers, you can use the `build.sub` script under the `recipes/` folder to build an Apptainer SIF file, and move it to your `staging/netid` folder.
+The steps for that would be:
 ```
 cd ~/amr-ecoevo
 cd recipes
@@ -70,7 +74,7 @@ Each proteins.faa file only starts with NODE_#, but when we make the phylogeneti
 condor_submit 00-add-sample-to-fasta.sub
 ```
 
-7. Combine files (optional)
+7. Combine files (recommenaded)
 
 Depending on how many samples you have, you will multiple that number by 752 and then by 2 to tell you how many output files to expect. If that is beyond your CHTC items quota, you might want to combine all the `.faa` files into one before running the hmm search job.
 
@@ -78,9 +82,9 @@ Depending on how many samples you have, you will multiple that number by 752 and
 condor_submit combined_fasta.sub
 ```
 
-This will create a file named `all_samples_renamed_scaffolds_proteins.faa` in your staging folder.
+If you run this script, this will create a file named `all_samples_renamed_scaffolds_proteins.faa` in your staging folder.
 
-6. Perform HMM search
+6. Perform HMM search 
    
 The repo already comes with a file called `sample_hmm_combinations.csv` that will be used in the `queue` statement of the submit file. This will perform of HMM search of all the AMRFinder genes against all your metagenomic assemblies. Note, this only uses 2CPU. Even on a large file (e.g. 82GB) the search is relatively quick. Increasing beyond 2CPU does not improve performance (see hmmer documentation)
 
@@ -90,7 +94,7 @@ condor_submit 01-hmmer.sub
 
 This will submit 752 jobs to CHTC.
 
-6. Count how many hits are obtained for each sample
+6. Move to your logs folder and count how many hits are obtained for each sample
    
 ```
 cd logs
@@ -114,21 +118,23 @@ hmm_SampleA_ANT_9-NCBIFAM_3954240_95.out:# Alignment of 2 hits satisfying inclus
 You can pipe this to a file, and use it for plotting later one. Essentially, you have a table on how many variants exist in each samples.
 
 ```
-grep 'hits satisfying' logs/hmm_all_samples_* > ../table_hits_all_HMM.txt
+grep 'hits satisfying' hmm_all_samples_* > ../table_hits_all_HMM.txt
 ```
 
 7. Get a list of all FASTA files > size 0
 
-`01-hmmer.sub` will write a `.fasta` file output even if there were no genes found. To only pick genes with hits for the alignment steps, we will filter the output files and create a list of samples with hits only.
+In the previous submit file, `01-hmmer.sub` will write a `.fasta` file output even if there were no genes found. To only pick genes with hits for the alignment steps, we will filter the output files and create a list of samples with hits only.
 Replace netid with yours
 
 ```
+# cd back to where the 01-, 02-, 03, etc. submit files are
 cd ..
 find /staging/netid/hmm_out/ -type f -size +0c > AMR_found.txt
 sed -i 's|/staging/netid/hmm_out/||g' AMR_found.txt 
 sed -i 's|.fasta||g' AMR_found.txt
 wc -l AMR_found.txt
 ```
+The `AMR_found.txt` file should now be in the same folder as the 02-mafft.sub file, because the last line for the queue statement is looking for the `AMR_found.txt` file. You should also head or cat the AMR_found.txt file. It should be a 1 column file with the list of AMR with positive (non-zero) hits.
 
 8. Run the alignment for each protein
 
@@ -143,10 +149,10 @@ This takes less than 2 minutes, even on the full dataset.
 You can sort the output files by size:
 
 ```
-ll -lhS /staging/$USER/HiteLab/aln
+ll -lhS /staging/netid/HiteLab/aln
 ```
 
-9. Run a maximum likelihood tree with bootstrapping.
+9. Run a maximum likelihood tree with bootstrapping for each individual AMR gene
 
 The goal here is a to create a single-gene phylogeny for each of the AMR found. 
 In the `03-raxml.sub` script, we set bootstrap values to be 100, but you can easily edit that to say 500, 1000, etc. as appropriate. 
@@ -166,5 +172,40 @@ You can use R and the example code to create a figure showing the number of geno
 
 # Other things to do:
 
+This repo contains 3 additional scripts to:
+1) Generating a phylogenetic tree based on pre-computed GTDB-tk results (not included in this repo)
+2) Running the RGI software and obtaining a table of results and a heatmap
+Together, these analyses can be combined into a ITOL tree figure.
 
 
+
+12. Run gtdbtk-tk de_novo to create the ITOL tree backbone.
+For this script, you will need a folder containing all your MAGs, and a custom_bacteria_taxonomy file.
+You can obtain these files by running GTDB-tk. 
+
+>[!NOTE] If you have ran the [binning_wf](https://github.com/UW-Madison-Bacteriology-Bioinformatics/binning_wf/tree/main), you will have those files in the taxonomy folder already.
+
+```
+condor_submit 04-mag-tree1.sub
+```
+This will create the ITOL formatted tree that you can use in the https://itol.embl.de/ tree editor.
+
+>[!WARNING] For steps 13 and 14, pay attention to all the file paths! the example in this folder was for a single sample example. If you'd like to run this on multiple samples, edit the queue statement to iterate through your samples.
+
+13. To run the RGI script
+
+```
+condor_submit 05-rgi.sub
+```
+For each MAG in each sample folder, you will get an json and rgi_out.txt output file. 
+
+14. To create a heatmap (optional)
+
+```
+condor_submit 06-rgi-heatmap.sub
+```
+
+
+# Notes
+
+This workflow was designed by Dr. Patricia Tran for a collaboration with Dr. Colette Nickodem and Dr. Jessica Hite. 
