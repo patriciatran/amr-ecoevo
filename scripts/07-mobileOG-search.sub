@@ -1,0 +1,26 @@
+container_image = file:///projects/bacteriology_tran_data/apptainer/mobileOG.sif
+
+
+executable = 07-mobileOG-search.sh
+
+db = /projects/bacteriology_tran_data/mobileOG-db_beatrix-1.6
+
+arguments = $(mag) $(db)
+
+transfer_input_files = file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/bins/refined/LagoonManure-1_S2_L007_refine_bins_DASTool_bins/$(mag)
+transfer_output_files = $(mag).faa, $(mag).tsv
+transfer_output_remaps = "$(mag).faa=file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/mobileOG/$(mag).faa;$(mag).tsv=file:///staging/ptran5/binning_wf/LagoonManure-1_S2_L007/mobileOG/$(mag).tsv"
+
+log = logs/mobileOG_$(mag).log
+error = logs/mobileOG_$(mag).err
+output = logs/mobileOG_$(mag).out
+
+requirements = (HasCHTCStaging == true) && (OpSysMajorVer > 7) && (HasChtcProjects == true)
+
+request_cpus = 8
+request_memory = 16GB
+request_disk = 15GB      
+
+queue mag from mags.txt 
+
+
