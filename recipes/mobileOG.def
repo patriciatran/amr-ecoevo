@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: continuumio/miniconda3:24.11.1-0
+
+%post
+	chmod 777 /tmp
+	apt-get update && apt-get install -y wget
+	conda install -c bioconda -c conda-forge -c anaconda biopython prodigal diamond pandas
