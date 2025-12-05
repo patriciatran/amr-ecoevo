@@ -1,4 +1,0 @@
-LagoonManure-1_S2_L007_metabat2_bin.8_sub.fa
-LagoonManure-1_S2_L007_metabat2_bin.93_sub.fa
-LagoonManure-1_S2_L007_metabat2_bin.94.fa
-LagoonManure-1_S2_L007_metabat2_bin.99.fa
